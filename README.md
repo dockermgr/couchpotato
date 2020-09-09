@@ -1,0 +1,2 @@
+# transmission
+transmission docker script 
