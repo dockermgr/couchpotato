@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 
 APPNAME="transmission"
+DOCKER_HUB_URL="linuxserver/transmission"
 
-mkdir -p "$DATADIR"/{config,watch,downloads} && chmod -Rf 777 "$DATADIR"
+sudo mkdir -p "$DATADIR"/{config,watch,downloads}
+sudo chmod -Rf 777 "$DATADIR"
 
 if docker ps -a | grep "$APPNAME" >/dev/null 2>&1; then
-  docker pull linuxserver/transmission && docker restart "$APPNAME"
+  sudo docker pull "$DOCKER_HUB_URL"
+  sudo docker restart "$APPNAME"
 else
-
-  docker run -d \
+  sudo docker run -d \
     --name=$APPNAME \
     --restart always \
     -v "$DATADIR/config":/config \
@@ -18,5 +20,5 @@ else
     -p 9091:9091 \
     -p 51413:51413 \
     -p 51413:51413/udp \
-    linuxserver/transmission
+    "$DOCKER_HUB_URL"
 fi
