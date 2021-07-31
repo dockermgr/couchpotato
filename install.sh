@@ -87,6 +87,7 @@ else
 fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if docker ps -a | grep -qs "$APPNAME"; then
+  printf_blue "Service is available at: http://$HOSTNAME:9091/"
   printf_green "Successfully setup transmission"
 else
   printf_return "Could not setup transmission"
