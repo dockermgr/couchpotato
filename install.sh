@@ -79,25 +79,24 @@ if [ -f "$INSTDIR/docker-compose.yml" ] && cmd_exists docker-compose; then
   fi
 else
   if docker ps -a | grep -qsw "$APPNAME"; then
-    __sudo docker pull "$DOCKER_HUB_URL" &>/dev/null
-    __sudo docker restart "$APPNAME" &>/dev/null
-  else
-    __sudo docker run -d \
-      --name="$APPNAME" \
-      --hostname "$APPNAME" \
-      --restart=unless-stopped \
-      --privileged \
-      -e TZ="$TRANSMISSION_SERVER_TIMEZONE" \
-      -v "$DATADIR/data":/data:z \
-      -v "$DATADIR/config":/config \
-      -v "$DATADIR/downloads":/downloads \
-      -v "$DATADIR/watch":/watch \
-      -v "$DATADIR/torrents":/mnt/torrents \
-      -p "$TRANSMISSION_SERVER_PORT":9091 \
-      -p 51413:51413 \
-      -p 51413:51413/udp \
-      "$DOCKER_HUB_URL" &>/dev/null
+    __sudo docker stop "$APPNAME" &>/dev/null
+    __sudo docker rm -f "$APPNAME" &>/dev/null
   fi
+  __sudo docker run -d \
+    --name="$APPNAME" \
+    --hostname "$APPNAME" \
+    --restart=unless-stopped \
+    --privileged \
+    -e TZ="$TRANSMISSION_SERVER_TIMEZONE" \
+    -v "$DATADIR/data":/data:z \
+    -v "$DATADIR/config":/config \
+    -v "$DATADIR/downloads":/downloads \
+    -v "$DATADIR/watch":/watch \
+    -v "$DATADIR/torrents":/mnt/torrents \
+    -p "$TRANSMISSION_SERVER_PORT":9091 \
+    -p 51413:51413 \
+    -p 51413:51413/udp \
+    "$DOCKER_HUB_URL" &>/dev/null
 fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if docker ps -a | grep -qs "$APPNAME"; then
