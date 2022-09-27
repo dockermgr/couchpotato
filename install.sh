@@ -227,8 +227,8 @@ else
     --restart=always \
     --privileged \
     -e TZ="$SERVER_TIMEZONE" \
-    -v $LOCAL_DATA_DIR:/app/data \
-    -v $LOCAL_CONFIG_DIR:/app/config \
+    -v $LOCAL_DATA_DIR:/data \
+    -v $LOCAL_CONFIG_DIR:/config \
     -p $SERVER_LISTEN:$SERVER_PORT_EXT:$SERVER_PORT_INT \
     -p $SERVER_LISTEN:$SERVER_PORT_ADMIN_EXT:$SERVER_PORT_ADMIN_INT \
     -p $SERVER_LISTEN:$SERVER_PORT_ADMIN_EXT/udp:$SERVER_PORT_ADMIN_INT \
