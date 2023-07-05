@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-##@Version           :  202307042207-git
+##@Version           :  202307042345-git
 # @@Author           :  Jason Hempstead
 # @@Contact          :  jason@casjaysdev.com
 # @@License          :  LICENSE.md
 # @@ReadME           :  install.sh --help
 # @@Copyright        :  Copyright: (c) 2023 Jason Hempstead, Casjays Developments
-# @@Created          :  Tuesday, Jul 04, 2023 22:07 EDT
+# @@Created          :  Tuesday, Jul 04, 2023 23:45 EDT
 # @@File             :  install.sh
 # @@Description      :  Container installer script for transmission
 # @@Changelog        :  New script
@@ -27,7 +27,7 @@
 # shellcheck disable=SC2317
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 APPNAME="transmission"
-VERSION="202307042207-git"
+VERSION="202307042345-git"
 REPO_BRANCH="${GIT_REPO_BRANCH:-main}"
 HOME="${USER_HOME:-$HOME}"
 USER="${SUDO_USER:-$USER}"
@@ -331,7 +331,7 @@ CONTAINER_WEB_SERVER_VHOSTS=""
 CONTAINER_ADD_RANDOM_PORTS=""
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Add custom port -  [exter:inter] or [listen:exter:inter/[tcp,udp]] random:[inter]
-CONTAINER_ADD_CUSTOM_PORT="0.0.0.0:9091:9091,0.0.0.0:51413:51413,0.0.0.0:51413:51413/udp"
+CONTAINER_ADD_CUSTOM_PORT="0.0.0.0:9091:9091,0.0.0.0:51413:51413/tcp,0.0.0.0:51413:51413/udp"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # mail settings - [yes/no] [user] [domainname] [server]
 CONTAINER_EMAIL_ENABLED=""
@@ -398,7 +398,7 @@ CONTAINER_MOUNT_CONFIG_ENABLED="yes"
 CONTAINER_MOUNT_CONFIG_MOUNT_DIR=""
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Define additional mounts - [/dir:/dir,/otherdir:/otherdir]
-CONTAINER_MOUNTS="/mnt/downloads:/data/downloads"
+CONTAINER_MOUNTS=""
 CONTAINER_MOUNTS+=""
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Define additional devices - [/dev:/dev,/otherdev:/otherdev]
@@ -412,6 +412,9 @@ CONTAINER_ENV+=""
 # Set sysctl - []
 CONTAINER_SYSCTL=""
 CONTAINER_SYSCTL+=""
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# set the max log file - [0-9][k|m|g]
+DOCKER_MAX_LOG_FILE="10m"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set custom capabilites - [NAME]
 DOCKER_CUSTOM_CAP=""
@@ -976,6 +979,10 @@ fi
 # Run the container privileged
 if [ "$CONTAINER_PRIVILEGED_ENABLED" = "yes" ]; then
   DOCKER_SET_OPTIONS+=("--privileged")
+fi
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if [ -n "$DOCKER_MAX_LOG_FILE" ]; then
+  DOCKER_SET_OPTIONS+=("--log-opt max-size=$DOCKER_MAX_LOG_FILE")
 fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set ram size
